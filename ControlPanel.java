@@ -61,6 +61,6 @@ public class ControlPanel extends JPanel {
         toggleErase.addItemListener(e -> drawPanel.setEraseMode(toggleErase.isSelected()));
         penSizeInput.addChangeListener(e -> drawPanel.setPenSize((int)penSizeInput.getValue()));
         sectorsSpinner.addChangeListener(e -> drawPanel.setNumberOfSectors((int)sectorsSpinner.getValue()));
-
+        saveButton.addActionListener(e -> drawPanel.saveImage());
     }
 }

@@ -16,7 +16,9 @@ public class DrawPanel extends JPanel{
     private Stack<Point.Double> points, undonePoints;
     private Stack<Color> colors, undoneColours;
     private Stack<Integer> sizes, undoneSizes, actions, undoneActions;
+    private GalleryPanel galleryPanel;
     DrawPanel(GalleryPanel galleryPanel){
+        this.galleryPanel = galleryPanel;
         setPreferredSize(new Dimension(600, 600));
         setBorder(BorderFactory.createLineBorder(Color.black));
         points = new Stack<>();
@@ -34,10 +36,10 @@ public class DrawPanel extends JPanel{
         super.paintComponent(g);
         doily = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D gg = doily.createGraphics();
+        drawPoints(gg);
         if(showLines){
             createSectorLines(gg);
         }
-        drawPoints(gg);
         g.drawImage(doily, 0, 0, this);
     }
 
@@ -65,6 +67,7 @@ public class DrawPanel extends JPanel{
     }
 
     public void createSectorLines(Graphics2D gg){
+        gg.setPaint(Color.white);
         int length = (doily.getWidth()/2);
         Point centre = new Point(doily.getWidth()/2, doily.getHeight()/2);
         for(int i=0; i<numberOfSectors;i++){
@@ -83,16 +86,25 @@ public class DrawPanel extends JPanel{
     }
 
     public void addPoint(int x, int y){
+        Color color;
+        if(eraseMode){
+            color = Color.black;
+        }else{
+            color = penColour;
+        }
         points.add(new Point.Double(x-penSize/2, y-penSize/2));
-        colors.add(penColour);
+        colors.add(color);
         sizes.add(penSize);
         if(reflectPoints){
             int x2 = doily.getWidth()/2 + (doily.getWidth()/2-x);
             int y2 = y;
             points.add(new Point.Double(x2-penSize/2, y2-penSize/2));
-            colors.add(penColour);
+            colors.add(color);
             sizes.add(penSize);
         }
+    }
+    public void saveImage(){
+        galleryPanel.saveImage(doily);
     }
 
     public void setEraseMode(boolean eraseMode) {
